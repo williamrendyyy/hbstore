@@ -1,0 +1,1 @@
+import{a as s}from"./app-5671d959.js";function n({value:t,className:e="",children:a,...m}){return s("label",{...m,className:"mb-1 block text-sm font-medium text-slate-700 "+e,children:t||a})}export{n as I};
