@@ -48,7 +48,7 @@ class ShippingAddressController extends Controller
         $request->user()->shippingAddresses()->create([
             'province_id' => $request->province,
             'city_id' => $request->city,
-            'subdistrict_id' => $request->subdistrict ?? null,
+            // 'subdistrict_id' => $request->subdistrict ?? null,
             'address' => $request->address,
             'is_default' => $request->boolean('is_default'),
         ]);
@@ -91,7 +91,7 @@ class ShippingAddressController extends Controller
         $shippingAddress->update([
             'province_id' => $request->province,
             'city_id' => $request->city,
-            'subdistrict_id' => $request->subdistrict,
+            // 'subdistrict_id' => $request->subdistrict,
             'address' => $request->address,
             'is_default' => $request->boolean('is_default'),
         ]);
