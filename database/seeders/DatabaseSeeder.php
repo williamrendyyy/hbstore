@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             VariationSeeder::class,
             PermissionSeeder::class,
+            ProvinceSeeder::class,
+            CitySeeder::class,
+            CourierSeeder::class,
         ]);
 
         \App\Models\User::factory(10)->create();
