@@ -1,256 +1,221 @@
-import { IconCheck, IconChevronDown, IconLoader2 } from '@tabler/icons-react';
-import { Fragment, useState } from 'react';
-import { usePage } from '@inertiajs/react';
-import { Listbox, Transition } from '@headlessui/react';
-import clsx from 'clsx';
+import { IconCheck, IconChevronDown, IconLoader2 } from "@tabler/icons-react";
+import { Fragment, useState } from "react";
+import { usePage } from "@inertiajs/react";
+import { Listbox, Transition } from "@headlessui/react";
+import clsx from "clsx";
+import axios from "axios";
 
 export default function Courier({
-    services,
-    setServices,
-    selectedService,
-    setSelectedService,
-    selectedCourier,
-    setSelectedCourier,
+  services,
+  setServices,
+  selectedService,
+  setSelectedService,
+  selectedCourier,
+  setSelectedCourier,
 }) {
-    const { shipping_address, total_weight, couriers } = usePage().props;
+  const { shipping_address, total_weight, couriers } = usePage().props;
+  const [loading, setLoading] = useState(false);
 
-    const [loading, setLoading] = useState(false);
+  async function chooseCourier(courier) {
+    setSelectedCourier(courier);
+    setLoading(true);
 
-    async function chooseCourier(e) {
-        setSelectedCourier(e);
-        setLoading(true);
-        try {
-            const { data } = await axios.post(route('check-postage'), {
-                courier: e.id,
-                destination: shipping_address?.subdistrict_id
-                    ? shipping_address?.subdistrict_id
-                    : shipping_address?.city_id,
-                destination_type: shipping_address?.subdistrict_id
-                    ? 'subdistrict'
-                    : 'city',
-                weight: total_weight,
-            });
-            setServices(data);
-            setLoading(false);
-            setSelectedService(data[0]);
-        } catch (e) {
-            setLoading(false);
-        }
+    const destination =
+      shipping_address?.subdistrict_id || shipping_address?.city_id;
+    const destination_type = shipping_address?.subdistrict_id
+      ? "subdistrict"
+      : "city";
+
+    if (!destination) {
+      setLoading(false);
+      return;
     }
 
-    function chooseService(e) {
-        setSelectedService(e);
+    try {
+      const { data } = await axios.post(route("check-postage"), {
+        courier: courier.id,
+        destination,
+        destination_type,
+        weight: total_weight,
+      });
+
+      setServices(data);
+      setSelectedService(data[0]);
+    } catch (error) {
+      console.error("Gagal mengambil layanan pengiriman", error);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    return (
-        <div className="mt-10 border-t border-slate-200 pt-10">
-            <h2 className="text-lg font-medium text-slate-900">Pilih Kurir</h2>
-            <div className="mt-4 grid grid-cols-2 items-center gap-2">
-                <Listbox value={selectedCourier} onChange={chooseCourier}>
-                    {({ open }) => (
-                        <>
-                            <Listbox.Label className="sr-only">
-                                Pilih layanan
-                            </Listbox.Label>
-                            <div className="relative">
-                                <div className="flex w-full divide-x divide-slate-200 overflow-hidden rounded-md border">
-                                    <div className="inline-flex w-full items-center gap-x-1.5 rounded-l-md bg-white px-3 py-2 text-slate-900 shadow-sm">
-                                        <p className="text-sm font-semibold">
-                                            {selectedCourier?.name ||
-                                                'Pilih layanan'}
-                                        </p>
-                                    </div>
-                                    <Listbox.Button className="inline-flex items-center bg-white px-2 py-2.5 hover:bg-slate-100 focus:outline-none">
-                                        <IconChevronDown
-                                            className="h-5 w-5 text-slate-900"
-                                            aria-hidden="true"
-                                        />
-                                    </Listbox.Button>
-                                </div>
+  function chooseService(service) {
+    setSelectedService(service);
+  }
 
-                                <Transition
-                                    show={open}
-                                    as={Fragment}
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                >
-                                    <Listbox.Options className="absolute right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-slate-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        {couriers.map((courier) => (
-                                            <Listbox.Option
-                                                key={courier.id}
-                                                className={({ active }) =>
-                                                    clsx(
-                                                        active
-                                                            ? 'bg-blue-600 text-white'
-                                                            : 'text-slate-900',
-                                                        'cursor-default select-none p-4 text-sm'
-                                                    )
-                                                }
-                                                value={courier}
-                                            >
-                                                {({ selected, active }) => (
-                                                    <div className="flex flex-col">
-                                                        <div className="flex justify-between">
-                                                            <p
-                                                                className={clsx(
-                                                                    selected
-                                                                        ? 'font-semibold'
-                                                                        : 'font-normal',
-                                                                    'uppercase'
-                                                                )}
-                                                            >
-                                                                {courier.code}
-                                                            </p>
-                                                            {selected ? (
-                                                                <span
-                                                                    className={
-                                                                        active
-                                                                            ? 'text-white'
-                                                                            : 'text-blue-600'
-                                                                    }
-                                                                >
-                                                                    <IconCheck
-                                                                        className="h-5 w-5"
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                </span>
-                                                            ) : null}
-                                                        </div>
-                                                        <div
-                                                            className={clsx(
-                                                                active
-                                                                    ? 'text-blue-200'
-                                                                    : 'text-slate-500',
-                                                                'mt-2'
-                                                            )}
-                                                        >
-                                                            <div>
-                                                                {courier.name}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </Listbox.Option>
-                                        ))}
-                                    </Listbox.Options>
-                                </Transition>
+  return (
+    <div className="mt-10 border-t border-slate-200 pt-10">
+      <h2 className="text-lg font-medium text-slate-900">Pilih Kurir</h2>
+
+      <div className="mt-4 space-y-4 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0">
+        {/* Courier Dropdown */}
+        <div className="relative">
+          <Listbox value={selectedCourier} onChange={chooseCourier}>
+            {({ open }) => (
+              <>
+                <div className="flex w-full divide-x divide-slate-200 overflow-hidden rounded-md border">
+                  <div className="inline-flex flex-1 items-center gap-x-1.5 bg-white px-3 py-2 text-slate-900">
+                    <p className="text-sm font-semibold">
+                      {selectedCourier?.name || "Pilih kurir"}
+                    </p>
+                  </div>
+                  <Listbox.Button className="bg-white px-2 py-2.5 hover:bg-slate-100 focus:outline-none">
+                    <IconChevronDown className="h-5 w-5 text-slate-900" />
+                  </Listbox.Button>
+                </div>
+
+                <Transition
+                  show={open}
+                  as={Fragment}
+                  leave="transition ease-in duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <Listbox.Options className="absolute z-10 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                    {couriers.map((courier) => (
+                      <Listbox.Option
+                        key={courier.id}
+                        value={courier}
+                        className={({ active }) =>
+                          clsx(
+                            active
+                              ? "bg-blue-600 text-white"
+                              : "text-slate-900",
+                            "cursor-default select-none p-4 text-sm"
+                          )
+                        }
+                      >
+                        {({ selected, active }) => (
+                          <div className="flex flex-col">
+                            <div className="flex justify-between">
+                              <p
+                                className={clsx(
+                                  "uppercase",
+                                  selected ? "font-semibold" : "font-normal"
+                                )}
+                              >
+                                {courier.code}
+                              </p>
+                              {selected && (
+                                <IconCheck
+                                  className={`h-5 w-5 ${
+                                    active ? "text-white" : "text-blue-600"
+                                  }`}
+                                />
+                              )}
                             </div>
-                        </>
-                    )}
-                </Listbox>
-
-                <IconLoader2
-                    className={`h-6 w-6 animate-spin text-slate-400 ${
-                        loading ? 'block' : 'hidden'
-                    }`}
-                />
-                {services.length && !loading > 0 ? (
-                    <Listbox value={selectedService} onChange={chooseService}>
-                        {({ open }) => (
-                            <>
-                                <Listbox.Label className="sr-only">
-                                    Pilih layanan
-                                </Listbox.Label>
-                                <div className="relative">
-                                    <div className="flex w-full divide-x divide-slate-200 overflow-hidden rounded-md border">
-                                        <div className="inline-flex w-full items-center gap-x-1.5 rounded-l-md bg-white px-3 py-2 text-slate-900 shadow-sm">
-                                            <p className="text-sm font-semibold">
-                                                {selectedService?.name ||
-                                                    'Pilih layanan'}
-                                            </p>
-                                        </div>
-                                        <Listbox.Button className="inline-flex items-center bg-white px-2 py-2.5 hover:bg-slate-100 focus:outline-none">
-                                            <IconChevronDown
-                                                className="h-5 w-5 text-slate-900"
-                                                aria-hidden="true"
-                                            />
-                                        </Listbox.Button>
-                                    </div>
-
-                                    <Transition
-                                        show={open}
-                                        as={Fragment}
-                                        leave="transition ease-in duration-100"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <Listbox.Options className="absolute right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-slate-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            {services.map((service) => (
-                                                <Listbox.Option
-                                                    key={service.id}
-                                                    className={({ active }) =>
-                                                        clsx(
-                                                            active
-                                                                ? 'bg-blue-600 text-white'
-                                                                : 'text-slate-900',
-                                                            'cursor-default select-none p-4 text-sm'
-                                                        )
-                                                    }
-                                                    value={service}
-                                                >
-                                                    {({ selected, active }) => (
-                                                        <div className="flex flex-col">
-                                                            <div className="flex justify-between">
-                                                                <p
-                                                                    className={
-                                                                        selected
-                                                                            ? 'font-semibold'
-                                                                            : 'font-normal'
-                                                                    }
-                                                                >
-                                                                    Kurir{' '}
-                                                                    {
-                                                                        service.name
-                                                                    }
-                                                                </p>
-                                                                {selected ? (
-                                                                    <span
-                                                                        className={
-                                                                            active
-                                                                                ? 'text-white'
-                                                                                : 'text-blue-600'
-                                                                        }
-                                                                    >
-                                                                        <IconCheck
-                                                                            className="h-5 w-5"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    </span>
-                                                                ) : null}
-                                                            </div>
-                                                            <div
-                                                                className={clsx(
-                                                                    active
-                                                                        ? 'text-blue-200'
-                                                                        : 'text-slate-500',
-                                                                    'mt-2'
-                                                                )}
-                                                            >
-                                                                <div>
-                                                                    {service.etd !==
-                                                                        '' &&
-                                                                        `Perkiraan Waktu ${service.etd} hari`}
-                                                                </div>
-                                                                <div>
-                                                                    Rp{' '}
-                                                                    {
-                                                                        service.cost
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Listbox.Option>
-                                            ))}
-                                        </Listbox.Options>
-                                    </Transition>
-                                </div>
-                            </>
+                            <p
+                              className={clsx(
+                                "mt-2",
+                                active ? "text-blue-200" : "text-slate-500"
+                              )}
+                            >
+                              {courier.name}
+                            </p>
+                          </div>
                         )}
-                    </Listbox>
-                ) : null}
-            </div>
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </>
+            )}
+          </Listbox>
         </div>
-    );
+
+        {/* Loader */}
+        <div className="flex items-center justify-center">
+          {loading && (
+            <IconLoader2 className="h-6 w-6 animate-spin text-slate-400" />
+          )}
+        </div>
+
+        {/* Service Dropdown */}
+        {!loading && services.length > 0 && (
+          <div className="relative sm:col-span-2">
+            <Listbox value={selectedService} onChange={chooseService}>
+              {({ open }) => (
+                <>
+                  <div className="flex w-full divide-x divide-slate-200 overflow-hidden rounded-md border">
+                    <div className="inline-flex flex-1 items-center gap-x-1.5 bg-white px-3 py-2 text-slate-900">
+                      <p className="text-sm font-semibold">
+                        {selectedService?.name || "Pilih layanan"}
+                      </p>
+                    </div>
+                    <Listbox.Button className="bg-white px-2 py-2.5 hover:bg-slate-100 focus:outline-none">
+                      <IconChevronDown className="h-5 w-5 text-slate-900" />
+                    </Listbox.Button>
+                  </div>
+
+                  <Transition
+                    show={open}
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                      {services.map((service, i) => (
+                        <Listbox.Option
+                          key={service.id || i}
+                          value={service}
+                          className={({ active }) =>
+                            clsx(
+                              active
+                                ? "bg-blue-600 text-white"
+                                : "text-slate-900",
+                              "cursor-default select-none p-4 text-sm"
+                            )
+                          }
+                        >
+                          {({ selected, active }) => (
+                            <div className="flex flex-col">
+                              <div className="flex justify-between">
+                                <p
+                                  className={
+                                    selected ? "font-semibold" : "font-normal"
+                                  }
+                                >
+                                  Kurir {service.name}
+                                </p>
+                                {selected && (
+                                  <IconCheck
+                                    className={`h-5 w-5 ${
+                                      active ? "text-white" : "text-blue-600"
+                                    }`}
+                                  />
+                                )}
+                              </div>
+                              <div
+                                className={clsx(
+                                  "mt-2",
+                                  active ? "text-blue-200" : "text-slate-500"
+                                )}
+                              >
+                                {service.etd && `Perkiraan ${service.etd} hari`}
+                                <div>Rp {service.cost}</div>
+                              </div>
+                            </div>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </>
+              )}
+            </Listbox>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

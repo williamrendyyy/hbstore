@@ -1,32 +1,25 @@
 export default function ProductBlock({ product }) {
-    return (
-        <div className="group relative">
-            <div className="min-h-80 aspect-h-1 aspect-w-1 lg:aspect-none w-full overflow-hidden rounded-md bg-slate-200 group-hover:opacity-75 lg:h-80">
-                <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                />
-            </div>
-            <div className="mt-4 flex justify-between">
-                <div>
-                    <h3 className="text-sm text-slate-700">
-                        <a href={product.href}>
-                            <span
-                                aria-hidden="true"
-                                className="absolute inset-0"
-                            />
-                            {product.name}
-                        </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-slate-500">
-                        {product.category?.name}
-                    </p>
-                </div>
-                <p className="text-sm font-medium text-slate-900">
-                    Rp {product.price}
-                </p>
-            </div>
+  return (
+    <div className="overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-lg">
+      {/* Gambar Produk */}
+      <a href={product.href} className="group block">
+        <div className="aspect-w-1 aspect-h-1 lg:aspect-none h-64 w-full overflow-hidden bg-slate-200">
+          <img
+            src={product.imageSrc}
+            alt={product.imageAlt}
+            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+          />
         </div>
-    );
+      </a>
+
+      {/* Info Produk */}
+      <div className="p-4">
+        <h3 className="truncate text-base font-semibold text-slate-800">
+          <a href={product.href}>{product.name}</a>
+        </h3>
+        <p className="mb-1 text-sm text-slate-500">{product.category?.name}</p>
+        <p className="text-lg font-bold text-slate-900">Rp {product.price}</p>
+      </div>
+    </div>
+  );
 }

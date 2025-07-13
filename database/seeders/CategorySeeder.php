@@ -12,15 +12,10 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         collect([
-            'Parfume',
-            'Food',
-            'Drinks',
-            'Snacks',
-            'Clothes',
-            'Shoes',
-            'Accessories',
-            'Electronics',
-            'Books',
+            'Casual Sneakers',
+            'Running Shoes',
+            'Slip-On Shoes',
+
         ])->each(function ($category) {
             \App\Models\Category::query()->create([
                 'name' => $category,

@@ -5,26 +5,36 @@ import Container from "@/Components/Container";
 export default function Home({ products }) {
   return (
     <>
-      <Head title="Welcome to Online Store" />
+      <Head title="Holly Beast Store" />
       <Container>
         <div
-          className="h-screen bg-cover bg-right pb-14"
-          style={{ backgroundImage: "url('bg.svg')" }}
+          className="min-h-screen bg-cover bg-right bg-no-repeat pb-14"
+          style={{ backgroundImage: "url('/bg.svg')" }}
         >
-          <div className="container mx-auto flex flex-col flex-wrap items-center px-6 pt-24 md:flex-row md:pt-48">
-            <div className="flex w-full flex-col justify-center overflow-y-hidden lg:items-start xl:w-2/5">
-              <h1 className="slide-in-bottom-h1 my-4 text-center text-3xl font-bold leading-tight text-black  md:text-left md:text-5xl">
-                Gerastore
+          <div className="mx-auto flex flex-col-reverse items-center px-6 pt-16 md:flex-row md:pt-24 lg:max-w-7xl">
+            {/* LEFT TEXT */}
+            <div className="w-full text-center md:w-1/2 md:text-left">
+              <h1 className="mb-6 text-balance text-4xl font-extrabold text-slate-800 sm:text-5xl lg:text-6xl">
+                Holly Beast Store
               </h1>
-              <p className="slide-in-bottom-subtitle mb-8 text-center text-base leading-normal md:text-left md:text-2xl">
-                Parfum Murah Pontianak
+              <p className="mb-5 text-lg text-slate-600 md:text-xl">
+                Click it, love it, buy it!
               </p>
+              <a
+                href={route("products.index")}
+                active={route().current("products.*")}
+                className="inline-block rounded-lg bg-sky-600 px-6 py-2 text-white transition hover:bg-blue-500"
+              >
+                Belanja Sekarang
+              </a>
             </div>
 
-            <div className="w-full overflow-y-hidden py-6 xl:w-3/5">
+            {/* RIGHT IMAGE */}
+            <div className="mb-10 w-full md:mb-0 md:w-1/2">
               <img
-                className="slide-in-bottom mx-auto w-5/6 rounded-[44px] lg:mr-0"
-                src="/img/parfumwp.jpg"
+                src="/img/sepatu.jpg"
+                alt="Produk utama"
+                className="mx-auto w-5/6 rounded-xl shadow-lg"
               />
             </div>
           </div>
@@ -38,7 +48,7 @@ Home.layout = (page) => (
   <AppLayout
     header={
       <h2 className="text-xl font-semibold leading-tight text-slate-800">
-        Start Shopping
+        Hi everyone
       </h2>
     }
     children={page}

@@ -15,16 +15,16 @@ export default function Form({ categories, product, page_settings }) {
   const { data, setData, errors, post, processing, reset } = useForm({
     category_id: product.category_id || 0,
     picture: "",
-    name: product.name || 0,
+    name: product.name || "",
     weight: product.weight || 0,
-    slug: product.slug || 0,
-    description: product.description || 0,
+    slug: product.slug || "",
+    description: product.description || "",
     price: product.price || 0,
     _method: page_settings.method,
   });
 
   const [inputFields, setInputFields] = useState(
-    product.variations && product.variations?.length > 0
+    product.variations?.length > 0
       ? product.variations
       : [
           {
@@ -37,7 +37,7 @@ export default function Form({ categories, product, page_settings }) {
         ]
   );
 
-  function submit(e) {
+  const submit = (e) => {
     e.preventDefault();
     router.post(
       page_settings.url,
@@ -61,175 +61,190 @@ export default function Form({ categories, product, page_settings }) {
         },
       }
     );
-  }
+  };
 
-  function handleInputChange(index, event) {
-    let data = [...inputFields];
-    data[index][event.target.name] = event.target.value;
-    setInputFields(data);
-  }
+  const handleInputChange = (index, event) => {
+    const values = [...inputFields];
+    values[index][event.target.name] = event.target.value;
+    setInputFields(values);
+  };
 
-  function onChange(event) {
-    setData(event.target.name, event.target.value);
-  }
+  const handleAddFields = () => {
+    setInputFields([
+      ...inputFields,
+      {
+        attribute_1: "",
+        attribute_2: "",
+        price: 0,
+        stock: 0,
+        weight: 0,
+      },
+    ]);
+  };
 
-  function handleAddFields() {
-    let newfield = {
-      attribute_1: "",
-      attribute_2: "",
-      price: 0,
-      weight: 0,
-      stock: 0,
-    };
-    setInputFields([...inputFields, newfield]);
-  }
-
-  function handleRemoveFields(index) {
+  const handleRemoveFields = (index) => {
     const values = [...inputFields];
     values.splice(index, 1);
     setInputFields(values);
-  }
+  };
+
+  const onChange = (e) => setData(e.target.name, e.target.value);
+
   return (
     <div>
-      <Head title={"Create Product"} />
+      <Head title="Tambah Produk" />
       <Container>
-        <div className="mt-16 rounded-xl bg-white p-4 shadow">
-          <form onSubmit={submit}>
+        <div className="mt-10 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <form onSubmit={submit} className="space-y-6">
             <UploadImage errors={errors} setData={setData} />
-            <div className="mb-6 max-w-xl">
-              <InputLabel htmlFor="name" value="Name" />
+
+            {/* Nama Produk */}
+            <div>
+              <InputLabel htmlFor="name" value="Nama Produk" />
               <TextInput
-                className="w-full"
-                onChange={onChange}
                 name="name"
                 value={data.name}
+                onChange={onChange}
+                className="mt-1 block w-full"
               />
               <InputError message={errors.name} />
             </div>
-            <div className="mb-6 max-w-xl">
-              <InputLabel htmlFor="weight" value="Weight" />
-              <TextInput
-                type="number"
-                placeholder={200}
-                className="w-full"
-                onChange={onChange}
-                name="weight"
-                value={data.weight}
-              />
-              <InputError message={errors.weight} />
-            </div>
-            <div className="mb-6 max-w-xs">
-              <InputLabel htmlFor="price" value="Price" />
+
+            {/* Harga */}
+            <div>
+              <InputLabel htmlFor="price" value="Harga Produk" />
               <NumericFormat
-                className="w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500"
                 name="price"
                 prefix="Rp "
-                thousandSeparator={true}
-                aria-describedby="price-currency"
+                thousandSeparator
                 allowNegative={false}
-                decimalScale={2}
+                decimalScale={0}
                 value={data.price}
-                onValueChange={(values, sourceInfo) => {
+                onValueChange={(values) => {
                   setData("price", values.floatValue);
                 }}
               />
               <InputError message={errors.price} />
             </div>
-            <div className="mb-6 max-w-xl">
-              <InputLabel htmlFor="category_id" value="Category" />
+
+            {/* Berat */}
+            <div>
+              <InputLabel htmlFor="weight" value="Berat Produk" />
+              <TextInput
+                type="number"
+                name="weight"
+                placeholder="Contoh: 200"
+                value={data.weight}
+                onChange={onChange}
+                className="mt-1 block w-full"
+              />
+              <InputError message={errors.weight} />
+            </div>
+
+            {/* Kategori */}
+            <div>
+              <InputLabel htmlFor="category_id" value="Kategori" />
               <Select
                 name="category_id"
-                id="category_id"
                 options={categories}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                 value={data.category_id}
                 onChange={onChange}
+                className="mt-1 block w-full"
               />
               <InputError message={errors.category_id} />
             </div>
-            <div className="mb-6 max-w-xl">
-              <InputLabel htmlFor="description" value="Description" />
+
+            {/* Deskripsi */}
+            <div>
+              <InputLabel htmlFor="description" value="Deskripsi" />
               <textarea
-                rows={4}
                 name="description"
-                id="description"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
+                rows="4"
                 value={data.description}
                 onChange={onChange}
+                className="mt-1 block w-full rounded-md border border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500"
               />
               <InputError message={errors.description} />
             </div>
 
-            <div className="mb-6">
-              <div>
-                <div className="mb-2 flex items-center gap-x-2">
-                  <InputLabel htmlFor="variation" value="Variations" />
+            {/* Variasi */}
+            <div className="rounded-md border border-slate-200 p-4 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-slate-700">
+                  Variasi Produk
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleAddFields}
+                  className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                >
+                  <IconSquareRoundedPlusFilled size={16} />
+                  Tambah
+                </button>
+              </div>
 
-                  <button
-                    className="text-blue-500"
-                    type="button"
-                    onClick={() => handleAddFields()}
+              <div className="space-y-3">
+                {inputFields.map((field, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-2 gap-3 sm:grid-cols-6"
                   >
-                    <IconSquareRoundedPlusFilled />
-                  </button>
-                </div>
-                {inputFields.map((inputField, index) => (
-                  <div key={index} className="mb-2 grid grid-cols-12 gap-2">
                     <TextInput
-                      className="col-span-2 h-9 w-full"
-                      type="text"
                       name="attribute_1"
-                      placeholder="Attribute 1"
-                      value={inputField.attribute_1}
-                      onChange={(event) => handleInputChange(index, event)}
+                      placeholder="Warna"
+                      value={field.attribute_1}
+                      onChange={(e) => handleInputChange(index, e)}
                     />
                     <TextInput
-                      className="col-span-2 h-9 w-full"
-                      type="text"
                       name="attribute_2"
-                      placeholder="Attribute 2"
-                      value={inputField.attribute_2}
-                      onChange={(event) => handleInputChange(index, event)}
+                      placeholder="Ukuran"
+                      value={field.attribute_2}
+                      onChange={(e) => handleInputChange(index, e)}
                     />
                     <TextInput
-                      className="col-span-2 h-9 w-full"
-                      type="number"
                       name="price"
-                      placeholder="Price"
-                      value={inputField.price}
-                      onChange={(event) => handleInputChange(index, event)}
+                      type="number"
+                      placeholder="Harga"
+                      value={field.price}
+                      onChange={(e) => handleInputChange(index, e)}
                     />
                     <TextInput
-                      className="col-span-2 h-9 w-full"
-                      type="number"
                       name="stock"
-                      placeholder="Stock"
-                      value={inputField.stock}
-                      onChange={(event) => handleInputChange(index, event)}
+                      type="number"
+                      placeholder="Stok"
+                      value={field.stock}
+                      onChange={(e) => handleInputChange(index, e)}
                     />
                     <TextInput
-                      className="col-span-2 h-9 w-full"
-                      type="number"
                       name="weight"
-                      placeholder="Satuan Gram"
-                      value={inputField.weight}
-                      onChange={(event) => handleInputChange(index, event)}
+                      type="number"
+                      placeholder="Berat"
+                      value={field.weight}
+                      onChange={(e) => handleInputChange(index, e)}
                     />
-                    <div className="col-span-1">
-                      <button
-                        type="button"
-                        className="flex h-9 w-9 rounded bg-gray-900 text-sm font-medium text-white"
-                        onClick={() => handleRemoveFields(index)}
-                      >
-                        <IconTrash className="m-auto h-4 w-4 stroke-1" />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFields(index)}
+                      className="flex h-10 w-full items-center justify-center rounded-md bg-rose-100 text-rose-600 hover:bg-rose-200"
+                    >
+                      <IconTrash className="h-4 w-4" />
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            <PrimaryButton disabled={processing}>Submit</PrimaryButton>
+            {/* Tombol Submit */}
+            <div>
+              <PrimaryButton
+                route={route("products.list")}
+                className="w-full justify-center rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+                disabled={processing}
+              >
+                Simpan Produk
+              </PrimaryButton>
+            </div>
           </form>
         </div>
       </Container>
@@ -240,9 +255,11 @@ export default function Form({ categories, product, page_settings }) {
 Form.layout = (page) => (
   <AppLayout
     header={
-      <h2 className="text-xl font-semibold leading-tight text-slate-800">
-        {page.props.page_settings.title}
-      </h2>
+      <div className="flex justify-center py-4">
+        <h2 className="text-2xl font-semibold text-slate-800 drop-shadow-sm">
+          {page.props.page_settings.title}
+        </h2>
+      </div>
     }
     children={page}
   />

@@ -19,7 +19,10 @@ class CartResource extends JsonResource
             'variation_id' => $this->variation_id,
             'quantity' => $qty = $this->quantity,
             'price' => number_format($this->price * $qty, 0, '.', '.'),
-            'variation' => new CartVariationResource($this->variation->load('product.category')),
+            'variation' => $this->variation
+    ? new CartVariationResource($this->variation->load('product.category'))
+    : null,
+
         ];
     }
 }

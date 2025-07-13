@@ -42,7 +42,7 @@ class ProductController extends Controller
         return inertia('Products/Form', [
             'product' => new Product,
             'page_settings' => [
-                'title' => 'Create Product',
+                'title' => 'Tambah Produk',
                 'url' => route('products.store'),
                 'method' => 'POST',
             ],
@@ -90,7 +90,7 @@ class ProductController extends Controller
         return inertia('Products/Form', [
             'product' => $product->load('variations'),
             'page_settings' => [
-                'title' => 'Update Product',
+                'title' => 'Update Produk',
                 'url' => route('products.update', $product),
                 'method' => 'PUT',
             ],

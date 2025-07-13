@@ -26,125 +26,119 @@ export default function Show({ product }) {
   return (
     <>
       <Head title={product.name} />
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-          <div className="aspect-h-1 aspect-w-1 w-full">
+      <div className="py-15 mx-auto max-w-2xl px-4 sm:px-6 sm:py-5 lg:max-w-7xl lg:px-8">
+        <div
+          onClick={() => window.history.back()}
+          className="hover inline-flex cursor-pointer items-center gap-2 text-lg font-semibold text-slate-700 transition duration-200 hover:text-sky-600"
+        >
+          ← Kembali
+        </div>
+        <div className="mt-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-12">
+          {/* GAMBAR PRODUK */}
+          <div className="aspect-square w-full overflow-hidden rounded-xl shadow-md">
             <img
               src={product.imageSrc}
               alt={product.imageAlt}
-              className="h-full w-full object-cover object-center sm:rounded-lg"
+              className="h-full w-full object-cover object-center"
             />
           </div>
 
-          <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+          {/* INFO PRODUK */}
+          <div className="mt-10 lg:mt-0">
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               {product.name}
             </h1>
 
-            <div className="mt-3">
-              <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-slate-900">
-                Rp {product.price}
-              </p>
-            </div>
+            <h1 className="mt-3 text-2xl font-semibold text-slate-800">
+              Rp {product.price}
+            </h1>
 
             <div className="mt-6">
-              <h3 className="sr-only">Description</h3>
-
               <div
-                className="text-base leading-relaxed text-slate-700"
+                className="space-y-4 text-base leading-relaxed text-slate-700"
                 dangerouslySetInnerHTML={{
                   __html: product.description,
                 }}
               />
             </div>
 
-            <div className="mt-6">
-              <div className="space-y-3 rounded-lg bg-white p-4 shadow">
-                <div>
-                  <RadioGroup
-                    value={selectedAttribute}
-                    onChange={setSelectedAttribute}
-                    className="mt-2"
-                  >
-                    <RadioGroup.Label className="sr-only">
-                      Choose variation 1
-                    </RadioGroup.Label>
-                    <div className="flex flex-wrap gap-3">
-                      {Object.keys(product.variations).map((key, index) => (
-                        <RadioGroup.Option
-                          key={key}
-                          value={key}
-                          className={({ active, checked }) =>
-                            clsx(
-                              "cursor-pointer focus:outline-none",
-                              active
-                                ? "ring-2 ring-blue-500 ring-offset-2"
-                                : "",
-                              checked
-                                ? "border-transparent bg-blue-600 text-white hover:bg-blue-700"
-                                : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50",
-                              "inline-flex items-center justify-center rounded-md border px-3 py-2 text-xs font-medium uppercase"
-                            )
-                          }
-                        >
-                          <RadioGroup.Label as="span">{key}</RadioGroup.Label>
-                        </RadioGroup.Option>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
-                <div>
-                  <RadioGroup
-                    value={selectedVariation}
-                    onChange={setSelectedVariation}
-                    className="mt-2"
-                  >
-                    <RadioGroup.Label className="sr-only">
-                      Choose variation 2
-                    </RadioGroup.Label>
-                    <div className="flex flex-wrap gap-3">
-                      {selectedAttribute
-                        ? product.variations[selectedAttribute].map(
-                            (variation) => {
-                              return (
-                                <RadioGroup.Option
-                                  key={variation.id}
-                                  value={variation}
-                                  className={({ active, checked }) =>
-                                    clsx(
-                                      variation.inStock
-                                        ? "cursor-pointer focus:outline-none"
-                                        : "cursor-not-allowed opacity-25",
-                                      active
-                                        ? "ring-2 ring-blue-500 ring-offset-2"
-                                        : "",
-                                      checked
-                                        ? "border-transparent bg-blue-600 text-white hover:bg-blue-700"
-                                        : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50",
-                                      "inline-flex items-center justify-center rounded-md border px-3 py-2 text-xs font-medium uppercase"
-                                    )
-                                  }
-                                  disabled={!variation.inStock}
-                                >
-                                  <RadioGroup.Label as="span">
-                                    {variation.attribute_2}
-                                  </RadioGroup.Label>
-                                </RadioGroup.Option>
-                              );
-                            }
+            {/* PILIHAN VARIASI */}
+            <div className="mt-8">
+              <div className="space-y-3 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
+                {/* Variasi 1 */}
+                <RadioGroup
+                  value={selectedAttribute}
+                  onChange={setSelectedAttribute}
+                >
+                  <RadioGroup.Label className="text-sm font-medium text-slate-700">
+                    Warna Tersedia
+                  </RadioGroup.Label>
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {Object.keys(product.variations).map((key) => (
+                      <RadioGroup.Option
+                        key={key}
+                        value={key}
+                        className={({ active, checked }) =>
+                          clsx(
+                            "cursor-pointer rounded-md border px-3 py-2 text-sm font-semibold uppercase transition-all duration-200",
+                            active ? "ring-2 ring-sky-600 ring-offset-1" : "",
+                            checked
+                              ? "border-transparent bg-sky-600 text-white"
+                              : "border-slate-300 bg-white text-slate-900 hover:bg-slate-50"
                           )
-                        : null}
-                    </div>
-                  </RadioGroup>
-                </div>
+                        }
+                      >
+                        <RadioGroup.Label as="span">{key}</RadioGroup.Label>
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
+
+                {/* Variasi 2 */}
+                <RadioGroup
+                  value={selectedVariation}
+                  onChange={setSelectedVariation}
+                >
+                  <RadioGroup.Label className="text-sm font-medium text-slate-700">
+                    Ukuran Tersedia
+                  </RadioGroup.Label>
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {product.variations[selectedAttribute]?.map((variation) => (
+                      <RadioGroup.Option
+                        key={variation.id}
+                        value={variation}
+                        disabled={!variation.inStock}
+                        className={({ active, checked }) =>
+                          clsx(
+                            "rounded-md border px-3 py-2 text-sm font-medium uppercase transition-all duration-200",
+                            variation.inStock
+                              ? "cursor-pointer"
+                              : "cursor-not-allowed opacity-40",
+                            active ? "ring-2 ring-sky-500 ring-offset-1" : "",
+                            checked
+                              ? "border-transparent bg-sky-600 text-white"
+                              : "border-slate-300 bg-white text-slate-900 hover:bg-slate-50"
+                          )
+                        }
+                      >
+                        <RadioGroup.Label as="span">
+                          {variation.attribute_2}
+                        </RadioGroup.Label>
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
               </div>
-              <div className="sm:flex-col1 mt-10 flex">
+            </div>
+
+            {/* TOMBOL ADD TO CART */}
+            <div className="mt-5">
+              <div className="flex flex-col items-center gap-3">
                 <button
                   onClick={() => addToCart(selectedVariation)}
-                  className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-50 sm:w-full"
+                  className="w-full rounded-lg bg-sky-600 px-6 py-3 font-semibold text-white transition-colors duration-300 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                 >
-                  Add to Cart
+                  Tambah Keranjang
                 </button>
               </div>
             </div>

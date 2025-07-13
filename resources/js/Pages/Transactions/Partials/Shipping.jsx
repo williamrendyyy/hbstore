@@ -1,58 +1,42 @@
 export default function Shipping({ transaction }) {
-    return (
-        <>
-            <div className="mt-6 lg:col-span-7 lg:mt-0">
-                <dl className="grid grid-cols-2 gap-x-6 text-sm">
-                    <div>
-                        <dt className="font-medium text-gray-900">
-                            Alamat Pengiriman
-                        </dt>
-                        <dd className="mt-3 text-gray-500">
-                            <span className="block">
-                                {
-                                    transaction.shipping_information.address
-                                        .detail
-                                }
-                            </span>
-                        </dd>
-                    </div>
-                    <div>
-                        <dt className="font-medium text-gray-900">Kurir</dt>
-                        <dd className="mt-3 space-y-0 text-slate-500">
-                            <div>
-                                {transaction.shipping_information.courier.name}{' '}
-                                <strong className="font-semibold uppercase">
-                                    (
-                                    {
-                                        transaction.shipping_information.courier
-                                            .code
-                                    }
-                                    )
-                                </strong>
-                            </div>
-                            <div>
-                                {transaction.shipping_information.service.name}{' '}
-                                <strong className="font-semibold uppercase">
-                                    (
-                                    {
-                                        transaction.shipping_information.service
-                                            .id
-                                    }
-                                    )
-                                </strong>
-                                <div className="mt-2">
-                                    Estimated time of arrival is{' '}
-                                    {
-                                        transaction.shipping_information.service
-                                            .etd
-                                    }{' '}
-                                    days
-                                </div>
-                            </div>
-                        </dd>
-                    </div>
-                </dl>
+  const shipping = transaction.shipping_information;
+
+  return (
+    <div className="mt-6 lg:col-span-7 lg:mt-0">
+      <h3 className="mb-4 text-base font-semibold text-slate-900">
+        Informasi Pengiriman
+      </h3>
+      <dl className="grid grid-cols-1 gap-6 text-sm sm:grid-cols-2">
+        {/* Alamat Pengiriman */}
+        <div>
+          <dt className="mb-1 font-medium text-slate-700">Alamat Pengiriman</dt>
+          <dd className="whitespace-pre-line text-slate-500">
+            {shipping?.address?.detail || "-"}
+          </dd>
+        </div>
+
+        {/* Kurir dan Layanan */}
+        <div>
+          <dt className="mb-1 font-medium text-slate-700">Kurir</dt>
+          <dd className="space-y-1 text-slate-500">
+            <div>
+              {shipping?.courier?.name || "-"}{" "}
+              <strong className="uppercase">
+                ({shipping?.courier?.code || "-"})
+              </strong>
             </div>
-        </>
-    );
+            <div>
+              {shipping?.service?.name || "-"}{" "}
+              <strong className="uppercase">
+                ({shipping?.service?.id || "-"})
+              </strong>
+            </div>
+            <div className="text-sm text-slate-400">
+              Estimasi tiba: {shipping?.service?.etd || "?"} hari
+            </div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
 }

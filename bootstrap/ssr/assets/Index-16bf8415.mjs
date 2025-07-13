@@ -17,33 +17,42 @@ function Show() {
   const { data: transactions, meta, links } = usePage().props.transactions;
   const [open, setOpen] = useState(false);
   const [details, setDetails] = useState(null);
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx(Head, { title: "Customer Orders" }),
-    /* @__PURE__ */ jsxs(Container, { children: [
-      details !== null && /* @__PURE__ */ jsx(Details, { open, setOpen, details }),
-      /* @__PURE__ */ jsxs("div", { className: "py-8 lg:py-16", children: [
-        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-4 gap-4", children: transactions.map((transaction) => /* @__PURE__ */ jsx(
-          TransactionBlock,
-          {
-            ...{
-              transaction,
-              setOpen,
-              setDetails
-            }
-          }
-        )) }),
-        meta.has_pages && /* @__PURE__ */ jsx(Pagination, { links })
-      ] })
-    ] })
-  ] });
+  return /* @__PURE__ */ jsxs(Fragment, {
+    children: [
+      /* @__PURE__ */ jsx(Head, { title: "Pesanan Pelanggan" }),
+      /* @__PURE__ */ jsxs(Container, {
+        children: [
+          details !== null &&
+            /* @__PURE__ */ jsx(Details, { open, setOpen, details }),
+          /* @__PURE__ */ jsxs("div", {
+            className: "py-8 lg:py-16",
+            children: [
+              /* @__PURE__ */ jsx("div", {
+                className: "grid grid-cols-4 gap-4",
+                children: transactions.map((transaction) =>
+                  /* @__PURE__ */ jsx(TransactionBlock, {
+                    ...{
+                      transaction,
+                      setOpen,
+                      setDetails,
+                    },
+                  })
+                ),
+              }),
+              meta.has_pages && /* @__PURE__ */ jsx(Pagination, { links }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
 }
-Show.layout = (page) => /* @__PURE__ */ jsx(
-  AppLayout,
-  {
-    header: /* @__PURE__ */ jsx("h1", { className: "text-3xl font-bold tracking-tight text-slate-900", children: "Customer Orders" }),
-    children: page
-  }
-);
-export {
-  Show as default
-};
+Show.layout = (page) =>
+  /* @__PURE__ */ jsx(AppLayout, {
+    header: /* @__PURE__ */ jsx("h1", {
+      className: "text-3xl font-bold tracking-tight text-slate-900",
+      children: "Pesanan Pelanggan",
+    }),
+    children: page,
+  });
+export { Show as default };
