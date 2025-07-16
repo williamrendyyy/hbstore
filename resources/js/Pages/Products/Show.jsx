@@ -34,7 +34,6 @@ export default function Show({ product }) {
           ← Kembali
         </div>
         <div className="mt-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-12">
-          {/* GAMBAR PRODUK */}
           <div className="aspect-square w-full overflow-hidden rounded-xl shadow-md">
             <img
               src={product.imageSrc}
@@ -43,7 +42,6 @@ export default function Show({ product }) {
             />
           </div>
 
-          {/* INFO PRODUK */}
           <div className="mt-10 lg:mt-0">
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               {product.name}
@@ -62,7 +60,6 @@ export default function Show({ product }) {
               />
             </div>
 
-            {/* PILIHAN VARIASI */}
             <div className="mt-8">
               <div className="space-y-3 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
                 {/* Variasi 1 */}

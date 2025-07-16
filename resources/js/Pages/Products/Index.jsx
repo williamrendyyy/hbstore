@@ -23,7 +23,6 @@ export default function Index({ title }) {
             ))}
           </div>
 
-          {/* Pagination */}
           {meta.has_pages && (
             <div className="mt-12 flex justify-center">
               <Pagination links={links} />

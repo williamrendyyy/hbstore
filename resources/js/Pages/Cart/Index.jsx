@@ -17,7 +17,6 @@ export default function Index({ carts }) {
 
           {carts.length > 0 ? (
             <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
-              {/* Daftar produk di keranjang */}
               <section aria-labelledby="cart-heading" className="lg:col-span-7">
                 <h3 id="cart-heading" className="sr-only">
                   Produk dalam keranjang
@@ -30,7 +29,6 @@ export default function Index({ carts }) {
                 </ul>
               </section>
 
-              {/* Ringkasan Pesanan */}
               <aside className="lg:col-span-5">
                 <OrderSummary />
               </aside>

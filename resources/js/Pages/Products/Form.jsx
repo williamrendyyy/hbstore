@@ -92,13 +92,12 @@ export default function Form({ categories, product, page_settings }) {
 
   return (
     <div>
-      <Head title="Tambah Produk" />
+      <Head title="Kelola Produk" />
       <Container>
         <div className="mt-10 rounded-xl bg-white p-6 shadow-sm sm:p-8">
           <form onSubmit={submit} className="space-y-6">
             <UploadImage errors={errors} setData={setData} />
 
-            {/* Nama Produk */}
             <div>
               <InputLabel htmlFor="name" value="Nama Produk" />
               <TextInput

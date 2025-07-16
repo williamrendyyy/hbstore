@@ -9,7 +9,6 @@ export default function Index({ shipping_addresses }) {
       <Container>
         <div className="py-8">
           <div className="max-w-2xl space-y-4">
-            {/* List Alamat */}
             {shipping_addresses.length > 0 ? (
               shipping_addresses.map((address) => (
                 <div
